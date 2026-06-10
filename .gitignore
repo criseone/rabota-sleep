@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+data/
+
+# macOS + local tool config (don't rely on global gitignore for a public repo)
+.DS_Store
+.claude/
+
+# Real-data dashboard build (default output) - NEVER publish.
+# Only the anonymized index.html (built with --anonymize) is committed/hosted.
+sleep-dashboard.html

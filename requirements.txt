@@ -1,0 +1,10 @@
+# Logging (A1): BLE heart-rate capture
+bleak>=0.22
+
+# Analysis & dashboard (A2): layer plots + shareable HTML
+# Dashboard charts are interactive Plotly (loaded from CDN). They need JS, so
+# view the dashboard over a hosted URL in a browser (GitHub Pages), not a mobile
+# file-preview pane. matplotlib is still used by analyze_night.py (static PNGs).
+numpy>=2.0
+matplotlib>=3.8
+plotly>=6.0
