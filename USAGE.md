@@ -31,11 +31,21 @@ Watch for live `HR … bpm` lines, then go to sleep. **Keep the Mac plugged in.*
 **3. In the morning** — stop it with **Ctrl+C**. Nothing is lost; data is saved
 continuously. Your night is now a CSV in `data/`.
 
-**4. Refresh the dashboard:**
+**4a. Preview locally** (real data, stays on your Mac):
 ```bash
 python build_dashboard.py
 ```
-Open / share **`sleep-dashboard.html`**. The new night appears automatically.
+Open **`sleep-dashboard.html`**. The new night appears automatically.
+
+**4b. Publish the shared dashboard** (anonymized, pushed to GitHub Pages):
+```bash
+python build_dashboard.py --anonymize --out index.html
+git add index.html && git commit -m "update dashboard" && git push
+```
+⚠️ **Both flags matter.** Without `--out index.html` the build writes
+`sleep-dashboard.html` instead — which is git-ignored — so `git commit` finds
+nothing to commit and the hosted page silently stays on the *old* night. The
+file GitHub hosts is **`index.html`**; that's the only one publishing touches.
 
 That's it. Everything below is detail and troubleshooting.
 
@@ -49,7 +59,8 @@ That's it. Everything below is detail and troubleshooting.
 | Log, targeting watch by address | `./log_sleep.sh --address <UUID>` |
 | Find your watch / list BLE devices | `python sleep_logger.py --scan` |
 | Logger directly (no caffeinate) | `python sleep_logger.py --name Forerunner` |
-| **Build the shareable dashboard** | `python build_dashboard.py` |
+| **Preview locally** (real data) | `python build_dashboard.py` |
+| **Publish** (anonymized → GitHub) | `python build_dashboard.py --anonymize --out index.html` then `git add index.html && git commit -m "update dashboard" && git push` |
 | Single-night tuning plot (PNG) | `python analyze_night.py` |
 
 ### `./log_sleep.sh` — the overnight logger
@@ -60,10 +71,17 @@ the watch by the name **"Forerunner"**. Any flags pass through to the logger.
   Bluetooth UUID changes between sessions, but the name stays put.
 
 ### `python build_dashboard.py` — shareable HTML
-Scans every night in `data/` and writes **`sleep-dashboard.html`** — one
-self-contained file (works offline, just email it).
-- `--out share.html` — choose the output path
+Scans every night in `data/` and writes one self-contained file (works offline).
+- **No flags** → `sleep-dashboard.html`, with **real** data. Git-ignored — local
+  preview only, never published.
+- `--anonymize --out index.html` → the **anonymized, hosted** build. `index.html`
+  is the only file committed/served by GitHub Pages.
+- `--out share.html` — choose a different output path
 - `--min-minutes 30` — ignore short test captures (default skips < 10 min)
+
+Why two filenames: it's a guardrail so real data can't be published by accident.
+The "no usable data" skip line you may see is just a false-start capture (a
+recording that caught nothing) — harmless; real nights still go through.
 
 ### `python analyze_night.py` — single-night detail (for tuning)
 Renders one night to a 4-panel PNG next to the CSV. Defaults to the newest night;
@@ -117,7 +135,8 @@ robot live later. Tunables live at the top of `sleep_layers.py`.
 | `analyze_night.py` | Single-night tuning plot (PNG) |
 | `build_dashboard.py` | Multi-night shareable HTML dashboard |
 | `data/` | Your recorded nights (git-ignored) |
-| `sleep-dashboard.html` | The generated dashboard to share |
+| `sleep-dashboard.html` | Local real-data preview (git-ignored, never published) |
+| `index.html` | The anonymized dashboard hosted on GitHub Pages |
 
 ---
 
