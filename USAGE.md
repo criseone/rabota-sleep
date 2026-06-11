@@ -33,11 +33,16 @@ continuously. Your night is now a CSV in `data/`.
 
 **4a. Preview locally** (real data, stays on your Mac):
 ```bash
-python build_dashboard.py
+make preview          # = python build_dashboard.py
 ```
 Open **`sleep-dashboard.html`**. The new night appears automatically.
 
 **4b. Publish the shared dashboard** (anonymized, pushed to GitHub Pages):
+```bash
+make publish                      # build index.html + commit + push
+make publish m="add Fri night"    # with a custom commit message
+```
+Equivalent long form:
 ```bash
 python build_dashboard.py --anonymize --out index.html
 git add index.html && git commit -m "update dashboard" && git push
@@ -134,6 +139,7 @@ robot live later. Tunables live at the top of `sleep_layers.py`.
 | `sleep_layers.py` | Causal streaming layer extractor (also the live-robot core) |
 | `analyze_night.py` | Single-night tuning plot (PNG) |
 | `build_dashboard.py` | Multi-night shareable HTML dashboard |
+| `Makefile` | Shortcuts: `make preview` / `make publish` / `make log` |
 | `data/` | Your recorded nights (git-ignored) |
 | `sleep-dashboard.html` | Local real-data preview (git-ignored, never published) |
 | `index.html` | The anonymized dashboard hosted on GitHub Pages |
