@@ -143,11 +143,3 @@ robot live later. Tunables live at the top of `sleep_layers.py`.
 | `data/` | Your recorded nights (git-ignored) |
 | `sleep-dashboard.html` | Local real-data preview (git-ignored, never published) |
 | `index.html` | The anonymized dashboard hosted on GitHub Pages |
-
----
-
-## On the horizon (see the roadmap)
-- **A3** — feed these layers to the robot live (watch → Mac → robot).
-- **A5** — cross-check against your ResMed AirSense 10 CPAP data (respiratory
-  rate + apnea events) to validate the restlessness layer. Pull a night's
-  `DATALOG` folder off the CPAP's SD card when you're ready to try it.
