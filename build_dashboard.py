@@ -146,17 +146,21 @@ def _labels(nights: list[Night], anon: bool) -> list[str]:
 def aggregate_fig(nights: list[Night], anon: bool = False) -> go.Figure:
     x = _labels(nights, anon)
     # Resting HR (min bpm) is a biometric number; drop it in anonymized builds.
+    # Titles are kept short so they don't overflow their column and collide on
+    # narrow (phone) widths once Plotly's responsive mode shrinks the figure.
     bars = [
-        ("Sleep duration (h)", [round(n.dur_h, 1) for n in nights], FG),
-        ("Deep sleep (%)", [round(100 * n.deep_frac) for n in nights], C_DEPTH),
+        ("Duration (h)", [round(n.dur_h, 1) for n in nights], FG),
+        ("Deep (%)", [round(100 * n.deep_frac) for n in nights], C_DEPTH),
         ("Restless (%)", [round(100 * n.rest_frac) for n in nights], C_REST),
     ]
     if not anon:
-        bars.insert(0, ("Resting HR (min bpm)", [n.min_hr for n in nights], C_PULSE))
-    fig = make_subplots(rows=1, cols=len(bars),
+        bars.insert(0, ("Rest HR (bpm)", [n.min_hr for n in nights], C_PULSE))
+    fig = make_subplots(rows=1, cols=len(bars), horizontal_spacing=0.12,
                         subplot_titles=tuple(title for title, _, _ in bars))
     for col, (_, y, color) in enumerate(bars, start=1):
         fig.add_bar(x=x, y=y, marker_color=color, row=1, col=col)
+    # Smaller subplot-title font keeps each title inside its column on phones.
+    fig.update_annotations(font_size=13)
     fig.update_layout(showlegend=False)
     return _dark(fig, 300)
 
@@ -189,7 +193,14 @@ def night_fig(n: Night, anon: bool = False) -> go.Figure:
         fig.update_xaxes(tickformat="%H:%M", title_text="time since onset", row=3, col=1)
     else:
         fig.update_yaxes(title_text="bpm", row=1, col=1)
-    return _dark(fig, 480)
+    fig.update_annotations(font_size=13)
+    fig = _dark(fig, 480)
+    # The shared dark theme parks the horizontal legend at y=1.08, right where
+    # the row-1 ("pulse") subplot title sits — they overlap. Lift the legend
+    # clear above the titles and give the top margin room for both.
+    fig.update_layout(margin=dict(l=60, r=24, t=64, b=40),
+                      legend=dict(y=1.12, yanchor="bottom"))
+    return fig
 
 
 def kpi_cards(nights: list[Night], anon: bool = False) -> str:
