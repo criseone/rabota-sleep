@@ -130,7 +130,7 @@ def process(path: Path) -> Night | None:
 def _dark(fig: go.Figure, height: int) -> go.Figure:
     fig.update_layout(
         paper_bgcolor=BG, plot_bgcolor=PANEL, font=dict(color=FG, size=12),
-        height=height, margin=dict(l=60, r=24, t=48, b=40),
+        height=height, margin=dict(l=44, r=14, t=44, b=40),
         legend=dict(bgcolor="rgba(0,0,0,0)", orientation="h", y=1.08, x=0),
     )
     fig.update_xaxes(showgrid=False, zeroline=False, linecolor=MUTED)
@@ -198,7 +198,7 @@ def night_fig(n: Night, anon: bool = False) -> go.Figure:
     # The shared dark theme parks the horizontal legend at y=1.08, right where
     # the row-1 ("pulse") subplot title sits — they overlap. Lift the legend
     # clear above the titles and give the top margin room for both.
-    fig.update_layout(margin=dict(l=60, r=24, t=64, b=40),
+    fig.update_layout(margin=dict(l=44, r=14, t=64, b=40),
                       legend=dict(y=1.12, yanchor="bottom"))
     return fig
 
@@ -276,6 +276,14 @@ def build_html(nights: list[Night], out: Path, anonymize: bool = False) -> None:
   .night h3 .sub {{ color:{MUTED}; font-weight:400; font-size:13px; margin-left:12px; }}
   footer {{ color:{MUTED}; font-size:12px; margin-top:48px; text-align:center; }}
   .legend-dot {{ display:inline-block; width:9px; height:9px; border-radius:50%; margin:0 4px 0 14px; }}
+  @media (max-width:600px) {{
+    .wrap {{ padding:20px 10px 48px; }}
+    .kpis {{ gap:8px; }}
+    .card {{ padding:12px 14px; min-width:96px; }}
+    h2 {{ margin:28px 0 6px; }}
+    .night {{ padding:6px 6px 12px; margin:12px 0; }}
+    .night h3 {{ margin:8px 6px 0; }}
+  }}
 </style></head>
 <body><div class="wrap">
   <header>
