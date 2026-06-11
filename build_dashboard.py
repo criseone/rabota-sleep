@@ -130,7 +130,10 @@ def process(path: Path) -> Night | None:
 def _dark(fig: go.Figure, height: int) -> go.Figure:
     fig.update_layout(
         paper_bgcolor=BG, plot_bgcolor=PANEL, font=dict(color=FG, size=12),
-        height=height, margin=dict(l=44, r=14, t=44, b=40),
+        # Keep l/r equal so the plotting area stays centered in its card; the
+        # y tick labels live inside the left margin, but matched margins read as
+        # balanced on a phone.
+        height=height, margin=dict(l=44, r=44, t=44, b=40),
         legend=dict(bgcolor="rgba(0,0,0,0)", orientation="h", y=1.08, x=0),
     )
     fig.update_xaxes(showgrid=False, zeroline=False, linecolor=MUTED)
@@ -198,7 +201,7 @@ def night_fig(n: Night, anon: bool = False) -> go.Figure:
     # The shared dark theme parks the horizontal legend at y=1.08, right where
     # the row-1 ("pulse") subplot title sits — they overlap. Lift the legend
     # clear above the titles and give the top margin room for both.
-    fig.update_layout(margin=dict(l=44, r=14, t=64, b=40),
+    fig.update_layout(margin=dict(l=44, r=44, t=64, b=40),
                       legend=dict(y=1.12, yanchor="bottom"))
     return fig
 
